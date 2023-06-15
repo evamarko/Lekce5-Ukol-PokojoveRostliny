@@ -1,7 +1,8 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-public class Plant {
+//2. Upravit třídu Plant, tak aby bylo možné seznam rostlin řadit podle názvu rostliny pomocí Collections.sort
+public class Plant implements Comparable<Plant> {
     //1. atributy třídy Plant
     private String name;
     private String notes;
@@ -116,4 +117,11 @@ public class Plant {
                 ", frequencyOfWatering=" + frequencyOfWatering +
                 '}';
     }
+
+    //2. Upravit třídu Plant, tak aby bylo možné seznam rostlin řadit podle názvu rostliny pomocí Collections.sort
+    @Override
+    public int compareTo(Plant plant) {
+        return this.name.compareTo(plant.name);
+    }
+
 }

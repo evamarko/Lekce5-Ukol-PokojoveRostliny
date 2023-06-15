@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 //8. Třída pro ukládání seznamu květin
 public class ListOfPlants {
-    private static List<Plant> plants = new ArrayList<>();
+    public static List<Plant> plants = new ArrayList<>();
 
     //9. Metody pro přídání květiny, získání květiny dle indexu a odebrání květiny ze seznamu
     //Přidání květiny
@@ -25,6 +25,7 @@ public class ListOfPlants {
 
     public List<Plant> getPlants() {
         return new ArrayList<>(plants);
+
     }
 
     //10. Metoda pro načtení květin ze souboru, v případě chybného vstupu vyhoďit výjimku
