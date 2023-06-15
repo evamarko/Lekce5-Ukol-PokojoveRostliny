@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 public class Plant {
     //1. atributy třídy Plant
@@ -60,7 +61,7 @@ public class Plant {
     //7. Ošetření zadávání data poslední zálivky, nesmí být starší než datum zasazení rostliny
     public void setWatering(LocalDate watering) throws PlantException {
         if (watering.isBefore(planted)) {
-            throw new PlantException("Květina nemůže být zalita před datem zasazení (zadané datum: " + watering + ")");
+            throw new PlantException("Květina nemůže být zalita před datem zasazení (zadané datum zálivky: " + watering + ", zadané datum zasazení: " + planted + ")");
         }
         this.watering = watering;
     }
@@ -83,18 +84,22 @@ public class Plant {
     }
 
     public static Plant parsePlant(String data) throws PlantException {
-
-        String [] items = data.split("\t");
-
-        String name = items[0];
-        String notes = items[1];
-        int frequencyOfWatering = Integer.parseInt(items[2]);
-        LocalDate watering = LocalDate.parse(items[3]);
-        LocalDate planted = LocalDate.parse(items[4]);
-
-        Plant result = new Plant(name, notes, planted, watering, frequencyOfWatering);
-
-        return result;
+        String [] items = new String[0];
+        try {
+            items = data.split("\t");
+            String name = items[0];
+            String notes = items[1];
+            int frequencyOfWatering = Integer.parseInt(items[2]);
+            LocalDate watering = LocalDate.parse(items[3]);
+            LocalDate planted = LocalDate.parse(items[4]);
+            return new Plant(name, notes, planted, watering, frequencyOfWatering);
+        } catch (DateTimeParseException e) {
+            //17. Vyzkoušej, že se aplikace bude chovat správně při načtení vadného souboru kvetiny-spatne-datum.txt.
+            throw new PlantException("Špatně zadané datum: " + items[3] + " nebo " + items[4]);
+        } catch (NumberFormatException e) {
+            //18. Vyzkoušej, že se aplikace bude chovat správně při načtení vadného souboru kvetiny-spatne-frekvence.txt
+            throw new PlantException("Špatně zadané číslo: " + items[2]);
+        }
     }
 
     public String exportToString() {
