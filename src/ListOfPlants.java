@@ -1,11 +1,10 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 //8. Třída pro ukládání seznamu květin
 public class ListOfPlants {
-    public static List<Plant> plants = new ArrayList<>();
+    static List<Plant> plants = new ArrayList<>();
+
 
     //9. Metody pro přídání květiny, získání květiny dle indexu a odebrání květiny ze seznamu
     //Přidání květiny
@@ -42,17 +41,35 @@ public class ListOfPlants {
     }
 
     //11. Metoda pro uložení akutalizovaného seznamu do souboru
-    public static void exportToFile(List<Plant> dataToWrite, String fileName) {
-        try (PrintWriter outputWriter = new PrintWriter(new FileWriter(fileName))) {
-            for (Plant plant : dataToWrite) {
-                outputWriter.println(plant.exportToString());
+    //je dobré použít BufferedWriter, zefektivňuje zápis - píše se po větších blocích,
+    //pokud ovšem nastane chyba a aplikace spadne, tak nemusí být ještě vše zapsané na disku
+    public static void exportToFile(List<Plant> dataToWrite, String fileName) throws PlantException {
+            try {
+                PrintWriter outputWriter = new PrintWriter(new BufferedWriter(new FileWriter(fileName)));
+                for (Plant plant : dataToWrite) {
+                    outputWriter.println(plant.exportToString());
+                }
+            } catch (IOException e) {
+                throw new PlantException("Nepodařilo se nahrát data do souboru: " + fileName);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
+    //3. Seřadit načtené rostliny podle názvu
+    public static void sortPlants() {
+        Collections.sort(plants);
     }
+
+    //5.Provést druhý výpis, který vypíše rostliny seřazené podle data poslední zálivky
+    public static void sortPlantsByComparator() {
+        Collections.sort(plants, new LastWateringDateComparator());
+    }
+
 }
+
+
+
+
+
 
 
 
